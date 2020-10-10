@@ -1,6 +1,125 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class='container-fluid mb-4 mt-4'>
+        <h1 class='text-center'>!!! ROCK PAPER SCISSORS !!!</h1>
+    </div>
+    
+    <div class='container' id='buttons'>
+        <div class='row justify-content-center'>
+            <div class='col-2'>
+                <button class='btn btn-primary' value='Rock'>Rock</button>
+            </div>
+            <div class='col-2'>
+                <button class='btn btn-primary' value='Paper'>Paper</button>
+            </div>
+            <div class='col-2'>
+                <button class='btn btn-primary' value='Scissors'>Scissors</button>
+            </div>
+        </div>
+    </div>
+    <div class='container mt-5 shadow p-3 mb-5 bg-white rounded' id='gameContainer' style='visibility:hidden;'>
+        <div class='row justify-content-center mb-3'>
+            <h5 id='winnerStr'></h5>
+        </div>
+        <div class='row justify-content-center'>
+            <div class='col-4 text-center'>
+                <p><b>Current Score</b></p>
+            </div>
+        </div>
+        <div class='row justify-content-center'>
+            <div class='col-4 text-center'>
+                <p>You</p>
+            </div>            
+            <div class='col-4 text-center'>
+                <p>Computer</p>
+            </div>
+        </div>
+        <div class='row justify-content-center'>
+            <div class='col-4 text-center'>
+                <p id='playerScore'></p>
+            </div>            
+            <div class='col-4 text-center'>
+                <p id='computerScore'></p>
+            </div>
+        </div>
+        <div class='row justify-content-center mb-3'>
+            <button class='btn btn-secondary' value='restart'>Restart</button>
+        </div>
+</body>
+
 <script>
 
-const choices = ['paper', 'rock', 'scissors'];
+const choices = ['Paper', 'Rock', 'Scissors'];
+let computerPoints = 0;
+let playerPoints = 0;
+let outcome;
+
+
+document.querySelectorAll('button').forEach(button => {
+  button.addEventListener('click', onClickEvent);
+});
+
+
+function onClickEvent(e) {
+
+    const value = e.target.value;
+    const gameContainer = document.querySelector('#gameContainer');
+    const winnerStr = document.querySelector('#winnerStr');
+    const playerScoreDiv = document.querySelector('#playerScore');
+    const computerScoreDiv = document.querySelector('#computerScore');
+
+    if (choices.indexOf(value) !== -1) {
+
+        gameContainer.style.visibility = 'visible';
+        outcome = playRound(value, computerPlay())
+
+        if (outcome.outcome !== 't') {
+            if (outcome.outcome === 'p') {
+                playerPoints++; 
+            }
+            else {
+                computerPoints++;
+            }
+        } 
+    }
+
+
+    else if (value === 'restart') {
+        
+        playerPoints = 0;
+        computerPoints = 0;
+        winnerStr.textContent = ''
+        
+    }
+
+    playerScoreDiv.innerHTML = playerPoints;
+    computerScoreDiv.innerHTML = computerPoints;
+    winnerStr.textContent = outcome.winnerStr;
+
+
+    /* adjusted to restart button
+
+    if (playerPoints === 5 || computerPoints === 5) {
+
+        const winner = playerPoints > computerPoints ? 'win' : 'lose';
+
+        div.innerHTML = `<br><br>You ${winner}! ${playerPoints} : ${computerPoints}`
+
+        playerPoints = 0;
+        computerPoints = 0;
+
+    }
+
+    */
+
+}
+
+
 
 function computerPlay() {
     
@@ -9,9 +128,6 @@ function computerPlay() {
 }
 
 function playRound(playerSelection, computerSelection) {
-
-    playerSelection = playerSelection.toLowerCase();
-    computerSelection = computerSelection.toLowerCase();
 
     const playerSelectionIndex = choices.indexOf(playerSelection);
     const computerSelectionIndex = choices.indexOf(computerSelection);
@@ -46,6 +162,7 @@ function game() {
     for (let i = 0; i < numRounds; i++) {
 
         let playerSelection;
+
         while (choices.indexOf(playerSelection) === -1) {
             playerSelection = prompt('Select a move (type rock, paper or scissors): ');
         }
